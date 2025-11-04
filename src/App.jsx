@@ -1,28 +1,38 @@
-import { useState } from 'react'
+import React, { useState } from 'react';
+import Navbar from './components/Navbar';
+import FarmerForm from './components/FarmerForm';
+import DistributorDashboard from './components/DistributorDashboard';
+import ConsumerPortal from './components/ConsumerPortal';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [batches, setBatches] = useState([]);
+
+  const handleRegister = (record) => {
+    setBatches((prev) => [record, ...prev]);
+  };
+
+  const handleUpdate = (updated) => {
+    setBatches((prev) => prev.map((b) => (b.batchId === updated.batchId ? updated : b)));
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white" id="home">
+      <Navbar />
 
-export default App
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-900">KrishiTrace</h1>
+          <p className="mt-2 text-slate-600 max-w-2xl mx-auto">
+            Blockchain-based supply chain transparency for agricultural produce. Register batches, update ownership, and let consumers verify authenticity.
+          </p>
+        </div>
+
+        <FarmerForm onRegister={handleRegister} />
+        <DistributorDashboard batches={batches} onUpdate={handleUpdate} />
+        <ConsumerPortal batches={batches} />
+
+        <footer className="py-8 text-center text-sm text-slate-500">Built for hackathon demo – UI-only prototype</footer>
+      </main>
+    </div>
+  );
+}
